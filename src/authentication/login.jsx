@@ -1,9 +1,12 @@
 // src/LoginForm.jsx
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const id = 8;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -11,8 +14,14 @@ const LoginForm = () => {
       email,
       password,
     };
-
     console.log(cred);
+
+    if (email === "miles@gmail.com" && password === "1234567") {
+      navigate("/");
+    } else {
+      alert("invalid login details");
+      return;
+    }
   };
 
   return (
