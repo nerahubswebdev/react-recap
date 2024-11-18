@@ -12,6 +12,8 @@ const RegistrationForm = () => {
 
   const navigate = useNavigate();
 
+  const baseUrl = import.meta.env.VITE_BASE_API;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // check if all fields are present
@@ -25,7 +27,7 @@ const RegistrationForm = () => {
     }
     // actually register a user
     axios
-      .post("https://cohort3-backend.onrender.com/auth/register", {
+      .post(`${baseUrl}/auth/register`, {
         myname: name,
         email,
         username,

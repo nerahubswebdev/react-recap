@@ -14,6 +14,7 @@ import ProjectLayout from "./layouts/project-layout.jsx";
 import Fulldetailspage from "./page-components/projects/fulldetailspage.jsx";
 import LoginForm from "./authentication/login.jsx";
 import RegistrationForm from "./authentication/register.jsx";
+import { AuthContextProvider } from "./context/auth-context.jsx";
 
 const router = createBrowserRouter([
   {
@@ -74,6 +75,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthContextProvider>
+      <RouterProvider router={router} />
+    </AuthContextProvider>
   </StrictMode>
 );
