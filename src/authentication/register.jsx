@@ -1,32 +1,61 @@
 // src/RegistrationForm.jsx
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const RegistrationForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmithdhdhhdhd = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
     e.preventDefault();
+    // check if all fields are present
+    if (!name || !email || !username || !password || !confirmPassword) {
+      alert("All fields requiored");
+      return;
+    }
     if (password !== confirmPassword) {
       alert("passwords dont match");
       return;
     }
-    const cred = {
-      email,
-      password,
-      name,
-      confirmPassword,
-    };
+    // actually register a user
+    axios
+      .post("https://cohort3-backend.onrender.com/auth/register", {
+        myname: name,
+        email,
+        username,
+        password,
+      })
+      .then((response) => {
+        setName("");
+        setEmail("");
+        setUsername("");
+        setPassword("");
+        setConfirmPassword("");
 
-    console.log(cred);
+        navigate("/login");
+      })
+      .catch((error) => {
+        if (error instanceof axios.AxiosError) {
+          console.log(
+            "the register error from axios => ",
+            error?.response?.data
+          );
+        } else {
+          console.log("reg error => ", error);
+        }
+      });
   };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full lg:max-w-[70%]">
         <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
-        <form onSubmit={handleSubmithdhdhhdhd}>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Name
@@ -35,10 +64,10 @@ const RegistrationForm = () => {
               type="text"
               id="name"
               placeholder="John Doe"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow-sm shadow-blue-400 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               required
               value={name}
-              onChange={(event) => setName(event.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -49,10 +78,24 @@ const RegistrationForm = () => {
               type="email"
               id="email"
               placeholder="you@example.com"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow-sm shadow-blue-400 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              placeholder="enter your username"
+              className="shadow-sm shadow-blue-400 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="mb-6">
@@ -60,13 +103,13 @@ const RegistrationForm = () => {
               Password
             </label>
             <input
-              type="text"
+              type="password"
               id="password"
               placeholder="********"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow-sm shadow-blue-400 appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               required
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="mb-6">
@@ -74,13 +117,13 @@ const RegistrationForm = () => {
               Confirm Password
             </label>
             <input
-              type="text"
+              type="password"
               id="confirmPassword"
               placeholder="********"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow-sm shadow-blue-400 appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               required
               value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
           <div className="flex items-center justify-between">
