@@ -28,7 +28,7 @@ const LoginForm = () => {
         console.log("the login response => ", response);
         setEmail("");
         setPassword("");
-        navigate("/");
+        navigate("/profile/hdhdhdhdhdhd");
       })
       .catch((error) => {
         if (error instanceof axios.AxiosError) {
