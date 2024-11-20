@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -28,7 +29,9 @@ const LoginForm = () => {
         console.log("the login response => ", response);
         setEmail("");
         setPassword("");
-        navigate("/profile/hdhdhdhdhdhd");
+        toast.success(response?.data?.message);
+        //navigate("/");
+        window.location.assign("/");
       })
       .catch((error) => {
         if (error instanceof axios.AxiosError) {
