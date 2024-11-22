@@ -3,36 +3,57 @@ import { useAuthContext } from "../../context/auth-context";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { FaSpinner } from "react-icons/fa";
+import { useParams } from "react-router-dom";
 
-const CreateProject = () => {
-  const { userData } = useAuthContext();
-  useEffect(() => {
-    if (!userData || userData?.isAdmin !== "ADMIN") {
-      window.location.assign("/");
-    }
-  }, []);
+const EditProject = () => {
   const baseUrl = import.meta.env.VITE_BASE_API;
+  const { id } = useParams();
+  console.log("the hdhdh :", id);
+  const [singleProductData, setSingleProductData] = useState();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
-  const [addingproject, setAddingproject] = useState(false);
+  const [updatingproject, setUpdatingproject] = useState(false);
+
+  useEffect(() => {
+    const products = async () => {
+      try {
+        const response = await axios.get(
+          `${baseUrl}/project/getsingle-project/${id}`
+        );
+        console.log(response);
+
+        if (response?.data) {
+          setSingleProductData(response?.data?.project);
+          setTitle(response?.data?.project?.title);
+          setDescription(response?.data?.project?.description);
+          setImage(response?.data?.project?.image);
+        }
+      } catch (error) {
+        console.log("did not fetch");
+      }
+    };
+    products();
+  }, [id]);
+
+  const updatedata = {
+    title,
+    description,
+    image,
+  };
 
   axios.defaults.withCredentials = true;
-  const handleSubmit = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      setAddingproject(true);
+      setUpdatingproject(true);
       if (!title || !description || !image) {
         toast.error("Required feilds needed.");
         return;
       }
-      const response = await axios.post(
-        `${baseUrl}/project/create-project`,
-        {
-          title,
-          description,
-          image,
-        },
+      const response = await axios.patch(
+        `${baseUrl}/project/update-project/${id}`,
+        updatedata,
         {
           withCredentials: true,
         }
@@ -52,13 +73,13 @@ const CreateProject = () => {
         console.log("logout error => ", error);
       }
     } finally {
-      setAddingproject(false);
+      setUpdatingproject(false);
     }
   };
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-      <h1 className="text-2xl font-bold text-center mb-6">Project Form</h1>
-      <form onSubmit={handleSubmit}>
+      <h1 className="text-2xl font-bold text-center mb-6">Update Project</h1>
+      <form onSubmit={handleUpdate}>
         {/* Title Input */}
         <div className="mb-4">
           <label
@@ -120,16 +141,16 @@ const CreateProject = () => {
         <div className="mb-4 text-center">
           <button
             type="submit"
-            disabled={addingproject}
+            disabled={updatingproject}
             className="w-full p-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500"
           >
-            {addingproject ? (
+            {updatingproject ? (
               <div className="flex items-center space-x-2 justify-center">
-                <span className="animate-pulse">Adding project</span>{" "}
+                <span className="animate-pulse">Updating project</span>{" "}
                 <FaSpinner className=" animate-spin " />
               </div>
             ) : (
-              "Submit"
+              "Update"
             )}
           </button>
         </div>
@@ -138,4 +159,4 @@ const CreateProject = () => {
   );
 };
 
-export default CreateProject;
+export default EditProject;

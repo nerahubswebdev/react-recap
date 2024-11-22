@@ -21,7 +21,7 @@ const Header = () => {
       if (response?.data.success) {
         console.log("the logout response => ", response?.data);
         toast.success(response?.data?.message);
-        //window.location.reload();
+        window.location.reload();
       }
     } catch (error) {
       if (error instanceof axios.AxiosError) {

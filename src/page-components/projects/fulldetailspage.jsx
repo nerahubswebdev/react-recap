@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 function Fulldetailspage() {
+  const baseUrl = import.meta.env.VITE_BASE_API;
   const { id } = useParams();
   console.log("the hdhdh :", id);
 
@@ -10,11 +12,13 @@ function Fulldetailspage() {
   useEffect(() => {
     const products = async () => {
       try {
-        const response = await fetch(
-          `https://fakestoreapi.com/products/${id}`
-        ).then((res) => res.json());
-        if (response) {
-          setSingleProductData(response);
+        const response = await axios.get(
+          `${baseUrl}/project/getsingle-project/${id}`
+        );
+        console.log(response);
+
+        if (response?.data) {
+          setSingleProductData(response?.data?.project);
         }
       } catch (error) {
         console.log("did not fetch");
@@ -29,9 +33,6 @@ function Fulldetailspage() {
         {singleProductData?.title}
       </h3>
       <p>{singleProductData?.description}</p>
-      <p>{singleProductData?.category}</p>
-      <p>{singleProductData?.price}</p>
-
       <div>
         <img
           src={singleProductData?.image}

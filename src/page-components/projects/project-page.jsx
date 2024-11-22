@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Projectdetails from "../../reusable-components/projects/projectDetail";
+import axios from "axios";
 
 function ProjectPage() {
-  const [productData, setProductData] = useState([]);
+  const baseUrl = import.meta.env.VITE_BASE_API;
+  const [projectData, setProjectData] = useState([]);
 
   useEffect(() => {
     const products = async () => {
       try {
-        const response = await fetch("https://fakestoreapi.com/products").then(
-          (res) => res.json()
-        );
+        const response = await axios.get(`${baseUrl}/project/getall-projects`);
+
+        console.log("tyhe projects => ", response);
+
         if (response) {
-          setProductData(response);
+          setProjectData(response?.data?.projects);
         }
       } catch (error) {
         console.log("did not fetch");
@@ -20,11 +23,11 @@ function ProjectPage() {
     products();
   }, []);
 
-  console.log("product from state : ", productData);
+  console.log("product from state : ", projectData);
 
   return (
     <div>
-      {productData?.length < 1 ? (
+      {projectData?.length < 1 ? (
         <div className="flex justify-center items-center h-full">
           <h3 className="font-bold text-orange-500 text-xl animate-pulse transition duration-200 ease-in">
             Loading.....
@@ -32,7 +35,7 @@ function ProjectPage() {
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-4">
-          {productData?.map((pers) => (
+          {projectData?.map((pers) => (
             <Projectdetails key={pers.id} personData={pers} />
           ))}
         </div>

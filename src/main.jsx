@@ -18,6 +18,7 @@ import { AuthContextProvider } from "./context/auth-context.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CreateProject from "./page-components/projects/create-project.jsx";
+import EditProject from "./page-components/projects/edit-project.jsx";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
           {
             path: "create",
             element: <CreateProject />,
+          },
+          {
+            path: "edit/:id",
+            element: <EditProject />,
           },
         ],
       },
